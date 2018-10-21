@@ -1,5 +1,9 @@
 github.com/Zauberstuhl/go-coinbase v1.0.0 h1:P98MLwPHd+Af/odAwM7zo4Xm9zA0A3+kIb7curHAMIA=
 github.com/Zauberstuhl/go-coinbase v1.0.0/go.mod h1:8ZnAd21UXoShhsswjy9qIwsRhCOHJazaAK/IpGBQG0w=
+github.com/adshao/go-binance v0.0.0-20181012004556-e9a4ac01ca48 h1:WMCW8nXwWVSBNCnnRyRL4uuMhll6v7wampmip1BnQVE=
+github.com/adshao/go-binance v0.0.0-20181012004556-e9a4ac01ca48/go.mod h1:Z5RNUOdmzhcVEymtZCuuzSGYMFO2YL8x/X8vGUyz2bc=
+github.com/bitly/go-simplejson v0.5.0 h1:6IH+V8/tVMab511d5bn4M7EwGXZf9Hj6i2xSwkNEM+Y=
+github.com/bitly/go-simplejson v0.5.0/go.mod h1:cXHtHw4XUPsvGaxgjIAn8PhEWG9NfngEKAMDJEczWVA=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fabioberger/coinbase-go v0.0.0-20160522011833-8328539b18ab h1:odM/npqUscEtKetZu2RU1I9wVkPBh8sV14PiCbsBLMU=
