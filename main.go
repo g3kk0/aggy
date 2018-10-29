@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/g3kk0/aggy/binance"
@@ -18,13 +19,22 @@ func main() {
 	gc := gdax.NewClient(gdaxKey, gdaxSecret, gdaxPassphrase)
 	bc := binance.NewClient(binanceKey, binanceSecret)
 
-	gdaxTransfers := gc.GetTransfers()
+	gdaxTransfers, err := gc.GetTransfers()
+	if err != nil {
+		log.Println(err)
+	}
 	fmt.Printf("gdaxTransfers = %+v\n", gdaxTransfers)
 
-	gdaxBalances := gc.GetBalances()
+	gdaxBalances, err := gc.GetBalances()
+	if err != nil {
+		log.Println(err)
+	}
 	fmt.Printf("gdaxBalances = %+v\n", gdaxBalances)
 
-	binanceBalances := bc.GetBalances()
+	binanceBalances, err := bc.GetBalances()
+	if err != nil {
+		log.Println(err)
+	}
 	fmt.Printf("binanceBalances = %+v\n", binanceBalances)
 
 	//	http.HandleFunc("/", handler)

@@ -1,34 +1,33 @@
 package gdax
 
 import (
-	"log"
 	"strconv"
 
 	gdax "github.com/preichenberger/go-gdax"
 )
 
-func (c *Client) GetTransfers() map[string]float64 {
-	var ledgers []gdax.LedgerEntry
+func (c *Client) GetTransfers() (map[string]float64, error) {
+	transfers := make(map[string]float64)
 
 	accounts, err := c.Conn.GetAccounts()
 	if err != nil {
-		log.Println(err)
+		return transfers, err
 	}
 
-	transfers := make(map[string]float64)
+	var ledgers []gdax.LedgerEntry
 
 	for _, a := range accounts {
 		cursor := c.Conn.ListAccountLedger(a.Id)
 		for cursor.HasMore {
 			if err := cursor.NextPage(&ledgers); err != nil {
-				log.Println(err)
+				return transfers, err
 			}
 
 			for _, e := range ledgers {
 				if e.Type == "transfer" && e.Details.ProductId == "" {
 					f, err := strconv.ParseFloat(e.Amount, 64)
 					if err != nil {
-						log.Println(err)
+						return transfers, err
 					}
 
 					transfers[a.Currency] += f
@@ -37,5 +36,5 @@ func (c *Client) GetTransfers() map[string]float64 {
 		}
 	}
 
-	return transfers
+	return transfers, nil
 }

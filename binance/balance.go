@@ -2,20 +2,27 @@ package binance
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"strconv"
 )
 
-func (c *Client) GetBalances() map[string]float64 {
+func (c *Client) GetBalances() (map[string]float64, error) {
 	balances := make(map[string]float64)
 
-	res, err := c.Conn.NewGetAccountService().Do(context.Background())
+	resp, err := c.Conn.NewGetAccountService().Do(context.Background())
 	if err != nil {
-		log.Println(err)
-		return nil
+		return balances, err
 	}
 
-	fmt.Printf("res = %+v\n", res)
+	for _, b := range resp.Balances {
+		f, err := strconv.ParseFloat(b.Free, 64)
+		if err != nil {
+			return balances, err
+		}
 
-	return balances
+		if f != 0 {
+			balances[b.Asset] = f
+		}
+	}
+
+	return balances, nil
 }

@@ -11,5 +11,6 @@ type Client struct {
 func NewClient(key, secret, passphrase string) *Client {
 	var c Client
 	c.Conn = gdax.NewClient(secret, key, passphrase)
+
 	return &c
 }

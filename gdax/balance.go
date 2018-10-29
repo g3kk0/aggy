@@ -1,26 +1,27 @@
 package gdax
 
 import (
-	"log"
 	"strconv"
 )
 
-func (c *Client) GetBalances() map[string]float64 {
+func (c *Client) GetBalances() (map[string]float64, error) {
+	balances := make(map[string]float64)
+
 	accounts, err := c.Conn.GetAccounts()
 	if err != nil {
-		log.Println(err)
+		return balances, err
 	}
-
-	balances := make(map[string]float64)
 
 	for _, a := range accounts {
 		f, err := strconv.ParseFloat(a.Balance, 64)
 		if err != nil {
-			log.Println(err)
+			return balances, err
 		}
 
-		balances[a.Currency] = f
+		if f != 0 {
+			balances[a.Currency] = f
+		}
 	}
 
-	return balances
+	return balances, nil
 }

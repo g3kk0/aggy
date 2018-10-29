@@ -8,8 +8,9 @@ type Client struct {
 	Conn *binance.Client
 }
 
-func NewClient(key, secret) *Client {
+func NewClient(key, secret string) *Client {
 	var c Client
 	c.Conn = binance.NewClient(key, secret)
+
 	return &c
 }
