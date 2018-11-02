@@ -6,6 +6,7 @@ require (
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.1
 	github.com/fabioberger/coinbase-go v0.0.0-20160522011833-8328539b18ab
+	github.com/g3kk0/go-forex v0.0.0-20181029225124-00ee74e63d4e
 	github.com/gorilla/websocket v1.4.0 // indirect
 	github.com/preichenberger/go-gdax v0.0.0-20180917142032-c70877428126
 )
