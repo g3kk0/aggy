@@ -28,7 +28,7 @@ func NewExchange(t, key, secret, passphrase string) *Exchange {
 	}
 }
 
-func (e *Exchange) Value() (Response, error) {
+func (e *Exchange) Value(quoteCurrency string) (Response, error) {
 	var r Response
 	var err error
 
@@ -36,7 +36,7 @@ func (e *Exchange) Value() (Response, error) {
 	case "gdax":
 		r.Type = e.Type
 		gc := gdax.NewClient(e.Key, e.Secret, e.Passphrase)
-		r.Holdings, err = gc.Assets()
+		r.Holdings, err = gc.Assets(quoteCurrency)
 		if err != nil {
 			return r, err
 		}

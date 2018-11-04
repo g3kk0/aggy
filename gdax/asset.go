@@ -3,11 +3,11 @@ package gdax
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
+	coinmarketcap "github.com/g3kk0/go-coinmarketcap"
 	forex "github.com/g3kk0/go-forex"
 )
-
-var FiatSymbols = []string{"EUR", "GBP", "USD"}
 
 type Asset struct {
 	Name          string
@@ -17,8 +17,11 @@ type Asset struct {
 	Value         float64
 }
 
-func (c *Client) Assets() ([]Asset, error) {
+func (c *Client) Assets(quoteCurrency string) ([]Asset, error) {
 	var assets []Asset
+	var cryptos []string
+
+	fiatSymbols := []string{"EUR", "GBP", "USD"}
 
 	accounts, err := c.Conn.GetAccounts()
 	if err != nil {
@@ -35,23 +38,22 @@ func (c *Client) Assets() ([]Asset, error) {
 		}
 
 		asset.Amount = amount
-
-		asset.QuoteCurrency = "GBP"
+		asset.QuoteCurrency = quoteCurrency
 
 		var fiatSymbol bool
-		for _, v := range FiatSymbols {
+		for _, v := range fiatSymbols {
 			if asset.Symbol == v {
 				fiatSymbol = true
 				break
 			}
 		}
 
-		if asset.Symbol == asset.QuoteCurrency {
+		if asset.Symbol == quoteCurrency {
 			fmt.Printf("skipping = %+v\n", asset.Symbol)
 			asset.Value = asset.Amount
 			//continue
 		} else if fiatSymbol {
-			value, err := convertFiat(asset.Symbol, "GBP", asset.Amount)
+			value, err := fiatValue(asset.Symbol, quoteCurrency, asset.Amount)
 			if err != nil {
 				return assets, err
 			}
@@ -60,6 +62,8 @@ func (c *Client) Assets() ([]Asset, error) {
 
 			fmt.Printf("forex convert = %+v\n", asset.Symbol)
 		} else {
+			cryptos = append(cryptos, asset.Symbol)
+
 			//value := convertCrypto()
 			//asset.Value = value
 
@@ -69,10 +73,18 @@ func (c *Client) Assets() ([]Asset, error) {
 		assets = append(assets, asset)
 	}
 
+	fmt.Printf("assets = %+v\n", assets)
+	fmt.Printf("cryptos = %+v\n", cryptos)
+	// lookup crypto value
+
+	cValue := cryptoValue(assets, cryptos, quoteCurrency)
+
+	fmt.Printf("cValue = %+v\n", cValue)
+
 	return assets, nil
 }
 
-func convertFiat(from, to string, amount float64) (float64, error) {
+func fiatValue(from, to string, amount float64) (float64, error) {
 	fc := forex.NewClient()
 
 	amountStr := fmt.Sprintf("%f", amount)
@@ -87,4 +99,35 @@ func convertFiat(from, to string, amount float64) (float64, error) {
 	return conversion.Result, nil
 }
 
-func convertCrypto() {}
+func cryptoValue(assets []Asset, cryptos []string, quoteCurrency string) []Asset {
+	cmc := coinmarketcap.NewClient()
+
+	//params := map[string]string{"symbol": "bch,eth"}
+	params := map[string]string{"symbol": strings.Join(cryptos, ","), "convert": quoteCurrency}
+	quotes, err := cmc.QuotesLatest(params)
+	if err != nil {
+		panic(err)
+	}
+
+	for i, a := range assets {
+		for _, c := range cryptos {
+			if a.Symbol == c {
+
+				price := quotes.Data[c].Quote[quoteCurrency].Price
+
+				// get GBP value of a single sotoshi
+
+				priceInPence := int64(price * 100)
+				fmt.Printf("priceInPence = %+v\n", priceInPence)
+
+				// below is wrong
+				assets[i].Value = 100
+			}
+		}
+	}
+
+	//fmt.Printf("quotes = %+v\n", quotes)
+	fmt.Printf("assets1 = %+v\n", assets)
+
+	return assets
+}

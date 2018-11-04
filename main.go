@@ -12,16 +12,17 @@ func main() {
 	gdaxPassphrase := os.Getenv("GDAX_PASSPHRASE")
 	binanceKey := os.Getenv("BINANCE_KEY")
 	binanceSecret := os.Getenv("BINANCE_SECRET")
+	quoteCurrency := "GBP"
 
 	ge := NewExchange("gdax", gdaxKey, gdaxSecret, gdaxPassphrase)
 	be := NewExchange("binance", binanceKey, binanceSecret, "")
 
-	geValue, err := ge.Value()
+	geValue, err := ge.Value(quoteCurrency)
 	if err != nil {
 		panic(err)
 	}
 
-	beValue, err := be.Value()
+	beValue, err := be.Value(quoteCurrency)
 	if err != nil {
 		panic(err)
 	}

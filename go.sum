@@ -8,6 +8,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fabioberger/coinbase-go v0.0.0-20160522011833-8328539b18ab h1:odM/npqUscEtKetZu2RU1I9wVkPBh8sV14PiCbsBLMU=
 github.com/fabioberger/coinbase-go v0.0.0-20160522011833-8328539b18ab/go.mod h1:xJ+HhsY90LojVt3vnpArzFEcf13xDhHdjnWBhMmhDOA=
+github.com/g3kk0/go-coinmarketcap v0.0.0-20181104190619-6df59c2fdfc0 h1:6/BU/wv+ZSYSoYIV9CfW26/QTWb3BWremolhWHPhgFo=
+github.com/g3kk0/go-coinmarketcap v0.0.0-20181104190619-6df59c2fdfc0/go.mod h1:g/sRxrSFkthbb+etinwdAM3Oucja61lVG4n1n14YV+w=
 github.com/g3kk0/go-forex v0.0.0-20181029225124-00ee74e63d4e h1:E9zAz2M9/Dt+8u+SWwnGGaxycRWL02tydWyO6xwGO4A=
 github.com/g3kk0/go-forex v0.0.0-20181029225124-00ee74e63d4e/go.mod h1:6oDxYXKppJEZ9kR1UcJPdrxjmhC7XoLUTusd5NstD/A=
 github.com/gorilla/websocket v1.4.0 h1:WDFjx/TMzVgy9VdMMQi2K2Emtwi2QcUQsztZ/zLaH/Q=
