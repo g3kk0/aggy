@@ -109,19 +109,31 @@ func cryptoValue(assets []Asset, cryptos []string, quoteCurrency string) []Asset
 		panic(err)
 	}
 
+	fmt.Printf("quotes = %+v\n", quotes)
+
 	for i, a := range assets {
 		for _, c := range cryptos {
 			if a.Symbol == c {
 
+				fmt.Printf("c = %+v\n", c)
+				fmt.Printf("quoteCurrency = %+v\n", quoteCurrency)
+				fmt.Printf("a.Amount = %+v\n", a.Amount)
+
 				price := quotes.Data[c].Quote[quoteCurrency].Price
+
+				fmt.Printf("price = %+v %T\n", price, price)
+
+				// don't use floats for this!
+				value := (price / 100000000) * (a.Amount * 100000000)
+				fmt.Printf("value = %+v\n\n", value)
 
 				// get GBP value of a single sotoshi
 
-				priceInPence := int64(price * 100)
-				fmt.Printf("priceInPence = %+v\n", priceInPence)
+				//priceInPence := int64(price * 100)
+				//fmt.Printf("priceInPence = %+v\n", priceInPence)
 
 				// below is wrong
-				assets[i].Value = 100
+				assets[i].Value = value
 			}
 		}
 	}
