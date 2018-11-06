@@ -15,8 +15,12 @@ type Exchange struct {
 }
 
 type Response struct {
-	Type     string
-	Holdings []gdax.Asset
+	Value    string `json:"value"`
+	Currency string `json:"currency"`
+	// define type for this!
+	//	Exchanges []
+	Holdings interface{} `json:"holdings"`
+	//Holdings []gdax.Asset
 }
 
 func NewExchange(t, key, secret, passphrase string) *Exchange {
@@ -34,7 +38,6 @@ func (e *Exchange) Value(quoteCurrency string) (Response, error) {
 
 	switch e.Type {
 	case "gdax":
-		r.Type = e.Type
 		gc := gdax.NewClient(e.Key, e.Secret, e.Passphrase)
 		r.Holdings, err = gc.Assets(quoteCurrency)
 		if err != nil {
@@ -42,8 +45,7 @@ func (e *Exchange) Value(quoteCurrency string) (Response, error) {
 		}
 
 	case "binance":
-		r.Type = e.Type
-		//		bc := binance.NewClient(e.Key, e.Secret)
+		//bc := binance.NewClient(e.Key, e.Secret)
 		fmt.Println("checking binance")
 	default:
 		return r, errors.New("unknown exchange type")

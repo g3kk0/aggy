@@ -49,9 +49,7 @@ func (c *Client) Assets(quoteCurrency string) ([]Asset, error) {
 		}
 
 		if asset.Symbol == quoteCurrency {
-			fmt.Printf("skipping = %+v\n", asset.Symbol)
 			asset.Value = asset.Amount
-			//continue
 		} else if fiatSymbol {
 			value, err := fiatValue(asset.Symbol, quoteCurrency, asset.Amount)
 			if err != nil {
@@ -59,27 +57,14 @@ func (c *Client) Assets(quoteCurrency string) ([]Asset, error) {
 			}
 
 			asset.Value = value
-
-			fmt.Printf("forex convert = %+v\n", asset.Symbol)
 		} else {
 			cryptos = append(cryptos, asset.Symbol)
-
-			//value := convertCrypto()
-			//asset.Value = value
-
-			fmt.Printf("crypto convert = %+v\n", asset.Symbol)
 		}
 
 		assets = append(assets, asset)
 	}
 
-	fmt.Printf("assets = %+v\n", assets)
-	fmt.Printf("cryptos = %+v\n", cryptos)
-	// lookup crypto value
-
-	cValue := cryptoValue(assets, cryptos, quoteCurrency)
-
-	fmt.Printf("cValue = %+v\n", cValue)
+	assets = cryptoValue(assets, cryptos, quoteCurrency)
 
 	return assets, nil
 }
@@ -102,44 +87,24 @@ func fiatValue(from, to string, amount float64) (float64, error) {
 func cryptoValue(assets []Asset, cryptos []string, quoteCurrency string) []Asset {
 	cmc := coinmarketcap.NewClient()
 
-	//params := map[string]string{"symbol": "bch,eth"}
 	params := map[string]string{"symbol": strings.Join(cryptos, ","), "convert": quoteCurrency}
 	quotes, err := cmc.QuotesLatest(params)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("quotes = %+v\n", quotes)
-
 	for i, a := range assets {
 		for _, c := range cryptos {
 			if a.Symbol == c {
-
-				fmt.Printf("c = %+v\n", c)
-				fmt.Printf("quoteCurrency = %+v\n", quoteCurrency)
-				fmt.Printf("a.Amount = %+v\n", a.Amount)
-
 				price := quotes.Data[c].Quote[quoteCurrency].Price
-
-				fmt.Printf("price = %+v %T\n", price, price)
 
 				// don't use floats for this!
 				value := (price / 100000000) * (a.Amount * 100000000)
-				fmt.Printf("value = %+v\n\n", value)
 
-				// get GBP value of a single sotoshi
-
-				//priceInPence := int64(price * 100)
-				//fmt.Printf("priceInPence = %+v\n", priceInPence)
-
-				// below is wrong
 				assets[i].Value = value
 			}
 		}
 	}
-
-	//fmt.Printf("quotes = %+v\n", quotes)
-	fmt.Printf("assets1 = %+v\n", assets)
 
 	return assets
 }
