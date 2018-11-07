@@ -45,8 +45,9 @@ func (e *Exchange) Value(quoteCurrency string) (Response, error) {
 	var r Response
 	var err error
 
-	//	fiatSymbols := []string{"EUR", "GBP", "USD"}
-	//	cryptoSymbols := []string{}
+	fiatSymbols := []string{"EUR", "GBP", "USD"}
+	cryptos := map[string]string{}
+	//cryptos := map[string]map[string]string{}
 
 	switch e.Type {
 	case "gdax":
@@ -72,6 +73,30 @@ func (e *Exchange) Value(quoteCurrency string) (Response, error) {
 	default:
 		return r, errors.New("unknown exchange type")
 	}
+
+	// get a list of cryptos
+	for _, h := range r.Holdings {
+
+		var fiatSymbol bool
+		for _, e := range fiatSymbols {
+			if h.Symbol == e {
+				fiatSymbol = true
+				break
+			}
+		}
+
+		if fiatSymbol {
+			fmt.Printf("fiat = %+v\n", h.Symbol)
+		} else {
+			fmt.Printf("crypto = %+v\n", h.Symbol)
+			cryptos[h.Symbol] = ""
+			//cryptoSymbols = append(cryptoSymbols, h.Symbol)
+
+		}
+
+	}
+
+	fmt.Printf("cryptos = %+v\n", cryptos)
 
 	return r, err
 }
