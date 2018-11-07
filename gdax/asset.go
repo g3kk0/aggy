@@ -2,6 +2,7 @@ package gdax
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -10,7 +11,6 @@ import (
 )
 
 type Asset struct {
-	Name          string
 	Symbol        string
 	Amount        float64
 	QuoteCurrency string
@@ -85,7 +85,8 @@ func fiatValue(from, to string, amount float64) (float64, error) {
 }
 
 func cryptoValue(assets []Asset, cryptos []string, quoteCurrency string) []Asset {
-	cmc := coinmarketcap.NewClient()
+	key := os.Getenv("COINMARKETCAP_KEY")
+	cmc := coinmarketcap.NewClient(key)
 
 	params := map[string]string{"symbol": strings.Join(cryptos, ","), "convert": quoteCurrency}
 	quotes, err := cmc.QuotesLatest(params)

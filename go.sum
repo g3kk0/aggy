@@ -10,6 +10,8 @@ github.com/fabioberger/coinbase-go v0.0.0-20160522011833-8328539b18ab h1:odM/npq
 github.com/fabioberger/coinbase-go v0.0.0-20160522011833-8328539b18ab/go.mod h1:xJ+HhsY90LojVt3vnpArzFEcf13xDhHdjnWBhMmhDOA=
 github.com/g3kk0/go-coinmarketcap v0.0.0-20181104190619-6df59c2fdfc0 h1:6/BU/wv+ZSYSoYIV9CfW26/QTWb3BWremolhWHPhgFo=
 github.com/g3kk0/go-coinmarketcap v0.0.0-20181104190619-6df59c2fdfc0/go.mod h1:g/sRxrSFkthbb+etinwdAM3Oucja61lVG4n1n14YV+w=
+github.com/g3kk0/go-coinmarketcap v0.0.0-20181107182534-0021a3e5b023 h1:tanMwhHV0pQGayJoXj+iOjQen4XgpzffBMWB+ypbJoY=
+github.com/g3kk0/go-coinmarketcap v0.0.0-20181107182534-0021a3e5b023/go.mod h1:g/sRxrSFkthbb+etinwdAM3Oucja61lVG4n1n14YV+w=
 github.com/g3kk0/go-forex v0.0.0-20181029225124-00ee74e63d4e h1:E9zAz2M9/Dt+8u+SWwnGGaxycRWL02tydWyO6xwGO4A=
 github.com/g3kk0/go-forex v0.0.0-20181029225124-00ee74e63d4e/go.mod h1:6oDxYXKppJEZ9kR1UcJPdrxjmhC7XoLUTusd5NstD/A=
 github.com/gorilla/websocket v1.4.0 h1:WDFjx/TMzVgy9VdMMQi2K2Emtwi2QcUQsztZ/zLaH/Q=
