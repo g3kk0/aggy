@@ -7,55 +7,29 @@ import (
 
 func main() {
 
-	gdaxSecret := os.Getenv("GDAX_SECRET")
-	gdaxKey := os.Getenv("GDAX_KEY")
-	gdaxPassphrase := os.Getenv("GDAX_PASSPHRASE")
-	//binanceKey := os.Getenv("BINANCE_KEY")
-	//binanceSecret := os.Getenv("BINANCE_SECRET")
+	//gdaxSecret := os.Getenv("GDAX_SECRET")
+	//gdaxKey := os.Getenv("GDAX_KEY")
+	//gdaxPassphrase := os.Getenv("GDAX_PASSPHRASE")
+	binanceKey := os.Getenv("BINANCE_KEY")
+	binanceSecret := os.Getenv("BINANCE_SECRET")
 	cmcKey := os.Getenv("COINMARKETCAP_KEY")
 	quoteCurrency := "GBP"
 
-	ge := NewExchange("gdax", gdaxKey, gdaxSecret, gdaxPassphrase)
-	//be := NewExchange("binance", binanceKey, binanceSecret, "")
+	//ge := NewExchange("gdax", gdaxKey, gdaxSecret, gdaxPassphrase)
+	be := NewExchange("binance", binanceKey, binanceSecret, "")
 
-	geValue, err := ge.Value(cmcKey, quoteCurrency)
-	if err != nil {
-		panic(err)
-	}
-
-	//beValue, err := be.Value(cmcKey, quoteCurrency)
+	//geValue, err := ge.Value(cmcKey, quoteCurrency)
 	//if err != nil {
 	//	panic(err)
 	//}
 
-	fmt.Printf("geValue = %+v\n", geValue)
-	//fmt.Printf("beValue = %+v\n", beValue)
+	beValue, err := be.Value(cmcKey, quoteCurrency)
+	if err != nil {
+		panic(err)
+	}
 
-	// gc := gdax.NewClient(gdaxKey, gdaxSecret, gdaxPassphrase)
-	// bc := binance.NewClient(binanceKey, binanceSecret)
-
-	// gdaxTransfers, err := gc.GetTransfers()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
-	// fmt.Printf("gdaxTransfers = %+v\n", gdaxTransfers)
-
-	// gdaxBalances, err := gc.GetBalances()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
-	// fmt.Printf("gdaxBalances = %+v\n", gdaxBalances)
-
-	// binanceBalances, err := bc.GetBalances()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
-	// fmt.Printf("binanceBalances = %+v\n", binanceBalances)
-
-	// GetQuotes(gdaxBalances)
-
-	//	http.HandleFunc("/", handler)
-	//	log.Fatal(http.ListenAndServe(":8080", nil))
+	//fmt.Printf("geValue = %+v\n", geValue)
+	fmt.Printf("beValue = %+v\n", beValue)
 
 	fmt.Println("done")
 }

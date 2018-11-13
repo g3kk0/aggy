@@ -5,24 +5,26 @@ import (
 	"strconv"
 )
 
-func (c *Client) GetBalances() (map[string]float64, error) {
-	balances := make(map[string]float64)
+func (c *Client) GetAccounts() (map[string]float64, error) {
+	accounts := make(map[string]float64)
 
 	resp, err := c.Conn.NewGetAccountService().Do(context.Background())
 	if err != nil {
-		return balances, err
+		return accounts, err
 	}
 
 	for _, b := range resp.Balances {
 		f, err := strconv.ParseFloat(b.Free, 64)
 		if err != nil {
-			return balances, err
+			return accounts, err
 		}
 
 		if f != 0 {
-			balances[b.Asset] = f
+			accounts[b.Asset] = f
 		}
 	}
 
-	return balances, nil
+	// clean these symbols: EON,EOP,IOTA
+
+	return accounts, nil
 }

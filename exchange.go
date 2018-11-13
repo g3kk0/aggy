@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/g3kk0/aggy/binance"
 	"github.com/g3kk0/aggy/gdax"
 	coinmarketcap "github.com/g3kk0/go-coinmarketcap"
 	forex "github.com/g3kk0/go-forex"
@@ -55,7 +56,7 @@ func (e *Exchange) Value(cmcKey, quoteCurrency string) (Response, error) {
 			return r, err
 		}
 
-		// do this better (avoid the copy)
+		// do this better (avoid the copy & duplication)
 		for _, a := range assets {
 			asset := Asset{
 				Exchange: "gdax",
@@ -66,8 +67,22 @@ func (e *Exchange) Value(cmcKey, quoteCurrency string) (Response, error) {
 			r.Holdings = append(r.Holdings, asset)
 		}
 	case "binance":
-		//bc := binance.NewClient(e.Key, e.Secret)
-		fmt.Println("checking binance")
+		bc := binance.NewClient(e.Key, e.Secret)
+
+		accounts, err := bc.GetAccounts()
+		if err != nil {
+			return r, err
+		}
+
+		for k, v := range accounts {
+			asset := Asset{
+				Exchange: "binance",
+				Symbol:   k,
+				Amount:   v,
+			}
+
+			r.Holdings = append(r.Holdings, asset)
+		}
 	default:
 		return r, errors.New("unknown exchange type")
 	}
@@ -124,12 +139,17 @@ func cryptoValue(holdings []Asset, cryptos []string, cmcKey, quoteCurrency strin
 
 	cmc := coinmarketcap.NewClient(cmcKey)
 
+	fmt.Printf("holdings = %+v\n", holdings)
+	fmt.Printf("cryptos = %+v\n", cryptos)
+
 	params := map[string]string{"symbol": strings.Join(cryptos, ","), "convert": quoteCurrency}
 
 	quotes, err := cmc.QuotesLatest(params)
 	if err != nil {
 		return err
 	}
+
+	fmt.Printf("quotes = %+v\n", quotes)
 
 	for _, c := range cryptos {
 		for i, h := range holdings {
