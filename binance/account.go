@@ -14,6 +14,13 @@ func (c *Client) GetAccounts() (map[string]float64, error) {
 	}
 
 	for _, b := range resp.Balances {
+		switch {
+		case b.Asset == "EON" || b.Asset == "EOP":
+			continue
+		case b.Asset == "IOTA":
+			b.Asset = "MIOTA"
+		}
+
 		f, err := strconv.ParseFloat(b.Free, 64)
 		if err != nil {
 			return accounts, err
@@ -23,8 +30,6 @@ func (c *Client) GetAccounts() (map[string]float64, error) {
 			accounts[b.Asset] = f
 		}
 	}
-
-	// clean these symbols: EON,EOP,IOTA
 
 	return accounts, nil
 }
