@@ -23,14 +23,14 @@ func (c *Client) GetTransfers() (map[string]float64, error) {
 				return transfers, err
 			}
 
-			for _, e := range ledgers {
-				if e.Type == "transfer" && e.Details.ProductId == "" {
-					f, err := strconv.ParseFloat(e.Amount, 64)
+			for _, l := range ledgers {
+				if l.Type == "transfer" && l.Details.ProductId == "" {
+					amount, err := strconv.ParseFloat(l.Amount, 64)
 					if err != nil {
 						return transfers, err
 					}
 
-					transfers[a.Currency] += f
+					transfers[a.Currency] += amount
 				}
 			}
 		}

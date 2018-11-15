@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/g3kk0/aggy/gdax"
 )
 
 type Response struct {
@@ -13,6 +15,8 @@ type Response struct {
 	QuoteCurrency string    `json:"quote_currency"`
 	FiatIn        float64   `json:"fiat_in"`
 	FiatOut       float64   `json:"fiat_out"`
+	Pnl           float64   `json:"pnl"`
+	PnlPc         float64   `json:"pnl_pc"`
 	Holdings      []Account `json:"holdings"`
 }
 
@@ -34,14 +38,24 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	ge := NewExchange("gdax", gdaxKey, gdaxSecret, gdaxPassphrase)
 	be := NewExchange("binance", binanceKey, binanceSecret, "")
 
+	// fix this client duplication
+	gc := gdax.NewClient(gdaxKey, gdaxSecret, gdaxPassphrase)
+
+	transfers, err := gc.GetTransfers()
+	if err != nil {
+		log.Println(err)
+	}
+
+	fmt.Printf("transfers = %+v\n", transfers)
+
 	geValue, err := ge.Value(cmcKey, quoteCurrency)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 
 	beValue, err := be.Value(cmcKey, quoteCurrency)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 
 	resp.Holdings = append(geValue, beValue...)
