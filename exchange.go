@@ -18,15 +18,8 @@ type Exchange struct {
 	Passphrase string
 }
 
-type Response struct {
-	Value    float64 `json:"value"`
-	Currency string  `json:"currency"`
-	Holdings []Asset `json:"holdings"`
-}
-
-type Asset struct {
+type Account struct {
 	Exchange      string  `json:"exchange"`
-	Name          string  `json:"name"`
 	Symbol        string  `json:"symbol"`
 	Price         float64 `json:"price"`
 	Amount        float64 `json:"amount"`
@@ -43,55 +36,55 @@ func NewExchange(t, key, secret, passphrase string) *Exchange {
 	}
 }
 
-func (e *Exchange) Value(cmcKey, quoteCurrency string) (Response, error) {
-	var r Response
+func (e *Exchange) Value(cmcKey, quoteCurrency string) ([]Account, error) {
+	var accounts []Account
 	var err error
 
 	switch e.Type {
 	case "gdax":
 		gc := gdax.NewClient(e.Key, e.Secret, e.Passphrase)
 
-		assets, err := gc.Assets(quoteCurrency)
+		accs, err := gc.GetAccounts()
 		if err != nil {
-			return r, err
+			return accounts, err
 		}
 
 		// do this better (avoid the copy & duplication)
-		for _, a := range assets {
-			asset := Asset{
+		for k, v := range accs {
+			account := Account{
 				Exchange: "gdax",
-				Symbol:   a.Symbol,
-				Amount:   a.Amount,
+				Symbol:   k,
+				Amount:   v,
 			}
 
-			r.Holdings = append(r.Holdings, asset)
+			accounts = append(accounts, account)
 		}
 	case "binance":
 		bc := binance.NewClient(e.Key, e.Secret)
 
-		accounts, err := bc.GetAccounts()
+		accs, err := bc.GetAccounts()
 		if err != nil {
-			return r, err
+			return accounts, err
 		}
 
-		for k, v := range accounts {
-			asset := Asset{
+		for k, v := range accs {
+			account := Account{
 				Exchange: "binance",
 				Symbol:   k,
 				Amount:   v,
 			}
 
-			r.Holdings = append(r.Holdings, asset)
+			accounts = append(accounts, account)
 		}
 	default:
-		return r, errors.New("unknown exchange type")
+		return accounts, errors.New("unknown exchange type")
 	}
 
 	// loop over all assets and get values
 	fiatSymbols := []string{"EUR", "GBP", "USD"}
 	var cryptos []string
 
-	for i, a := range r.Holdings {
+	for i, a := range accounts {
 		var fiatSymbol bool
 		for _, e := range fiatSymbols {
 			if a.Symbol == e {
@@ -105,42 +98,28 @@ func (e *Exchange) Value(cmcKey, quoteCurrency string) (Response, error) {
 		} else if fiatSymbol {
 			value, err := fiatValue(a.Symbol, quoteCurrency, a.Amount)
 			if err != nil {
-				return r, err
+				return accounts, err
 			}
 
-			r.Holdings[i].QuoteCurrency = quoteCurrency
-			r.Holdings[i].Value = value
+			accounts[i].QuoteCurrency = quoteCurrency
+			accounts[i].Value = value
 		} else {
 			cryptos = append(cryptos, a.Symbol)
 		}
 	}
 
-	//	fmt.Printf("r = %+v\n", r)
-
-	err = cryptoValue(r.Holdings, cryptos, cmcKey, quoteCurrency)
+	err = cryptoValue(accounts, cryptos, cmcKey, quoteCurrency)
 	if err != nil {
-		return r, err
+		return accounts, err
 	}
 
-	// compute totals
-	r.Currency = quoteCurrency
-
-	for i, _ := range r.Holdings {
-		r.Value = r.Value + r.Holdings[i].Value
-	}
-
-	//	fmt.Printf("r = %+v\n", r)
-
-	return r, err
+	return accounts, err
 }
 
-func cryptoValue(holdings []Asset, cryptos []string, cmcKey, quoteCurrency string) error {
+func cryptoValue(accounts []Account, cryptos []string, cmcKey, quoteCurrency string) error {
 	var err error
 
 	cmc := coinmarketcap.NewClient(cmcKey)
-
-	fmt.Printf("holdings = %+v\n", holdings)
-	fmt.Printf("cryptos = %+v\n", cryptos)
 
 	params := map[string]string{"symbol": strings.Join(cryptos, ","), "convert": quoteCurrency}
 
@@ -149,17 +128,15 @@ func cryptoValue(holdings []Asset, cryptos []string, cmcKey, quoteCurrency strin
 		return err
 	}
 
-	fmt.Printf("quotes = %+v\n", quotes)
-
 	for _, c := range cryptos {
-		for i, h := range holdings {
-			if c == h.Symbol {
-				price := quotes.Data[h.Symbol].Quote[quoteCurrency].Price
-				value := (price / 100000000) * (h.Amount * 100000000)
+		for i, a := range accounts {
+			if c == a.Symbol {
+				price := quotes.Data[a.Symbol].Quote[quoteCurrency].Price
+				value := (price / 100000000) * (a.Amount * 100000000)
 
-				holdings[i].Price = price
-				holdings[i].QuoteCurrency = quoteCurrency
-				holdings[i].Value = value
+				accounts[i].Price = price
+				accounts[i].QuoteCurrency = quoteCurrency
+				accounts[i].Value = value
 			}
 		}
 	}

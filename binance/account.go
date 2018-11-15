@@ -8,26 +8,26 @@ import (
 func (c *Client) GetAccounts() (map[string]float64, error) {
 	accounts := make(map[string]float64)
 
-	resp, err := c.Conn.NewGetAccountService().Do(context.Background())
+	accs, err := c.Conn.NewGetAccountService().Do(context.Background())
 	if err != nil {
 		return accounts, err
 	}
 
-	for _, b := range resp.Balances {
+	for _, a := range accs.Balances {
 		switch {
-		case b.Asset == "EON" || b.Asset == "EOP":
+		case a.Asset == "EON" || a.Asset == "EOP":
 			continue
-		case b.Asset == "IOTA":
-			b.Asset = "MIOTA"
+		case a.Asset == "IOTA":
+			a.Asset = "MIOTA"
 		}
 
-		f, err := strconv.ParseFloat(b.Free, 64)
+		amount, err := strconv.ParseFloat(a.Free, 64)
 		if err != nil {
 			return accounts, err
 		}
 
-		if f != 0 {
-			accounts[b.Asset] = f
+		if amount != 0 {
+			accounts[a.Asset] = amount
 		}
 	}
 
