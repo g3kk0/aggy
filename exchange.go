@@ -81,7 +81,6 @@ func (e *Exchange) Value(cmcKey, quoteCurrency string) ([]Account, error) {
 	}
 
 	// loop over all assets and get values
-	fiatSymbols := []string{"EUR", "GBP", "USD"}
 	var cryptos []string
 
 	for i, a := range accounts {

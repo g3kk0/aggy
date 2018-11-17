@@ -11,17 +11,12 @@ import (
 )
 
 type Response struct {
-	Value         float64   `json:"value"`
-	QuoteCurrency string    `json:"quote_currency"`
-	FiatIn        float64   `json:"fiat_in"`
-	FiatOut       float64   `json:"fiat_out"`
-	Pnl           float64   `json:"pnl"`
-	PnlPc         float64   `json:"pnl_pc"`
-	Holdings      []Account `json:"holdings"`
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "UI")
+	Value    float64   `json:"value"`
+	Currency string    `json:"currency"`
+	FiatIn   float64   `json:"fiat_in"`
+	Pnl      float64   `json:"pnl"`
+	PnlPc    float64   `json:"pnl_pc"`
+	Holdings []Account `json:"holdings"`
 }
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
@@ -43,19 +38,34 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 
 	transfers, err := gc.GetTransfers()
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), 500)
 	}
 
-	fmt.Printf("transfers = %+v\n", transfers)
+	for k, v := range transfers {
+		if k == quoteCurrency {
+			resp.FiatIn = resp.FiatIn + v
+		} else {
+			for _, f := range fiatSymbols {
+				if k == f {
+					value, err := fiatValue(k, quoteCurrency, v)
+					if err != nil {
+						http.Error(w, err.Error(), 500)
+					}
+
+					resp.FiatIn = resp.FiatIn + value
+				}
+			}
+		}
+	}
 
 	geValue, err := ge.Value(cmcKey, quoteCurrency)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), 500)
 	}
 
 	beValue, err := be.Value(cmcKey, quoteCurrency)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), 500)
 	}
 
 	resp.Holdings = append(geValue, beValue...)
@@ -65,20 +75,24 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		totalValue = totalValue + a.Value
 	}
 
-	resp.QuoteCurrency = quoteCurrency
+	resp.Currency = quoteCurrency
 	resp.Value = totalValue
+	resp.Pnl = resp.Value - resp.FiatIn
+	resp.PnlPc = (resp.Pnl / resp.FiatIn) * 100
 
 	json, err := json.MarshalIndent(resp, "", "  ")
 	if err != nil {
-		panic(err)
+		http.Error(w, err.Error(), 500)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(json)
 }
 
+var fiatSymbols = []string{"EUR", "GBP", "USD"}
+
 func main() {
-	http.HandleFunc("/", handler)
+	http.Handle("/", http.FileServer(http.Dir("./static")))
 	http.HandleFunc("/api", apiHandler)
 	fmt.Println("starting web server")
 	log.Fatal(http.ListenAndServe(":9999", nil))
