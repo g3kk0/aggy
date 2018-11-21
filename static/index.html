@@ -3,21 +3,32 @@
 <html>
 
 <head>
-    <title>Mark's Cryptos</title>
+    <title>My Cryptos</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="/style.css" rel="stylesheet">
     <script src="/script.js"></script>
 </head>
 
-<body class="bg-dark text-white">
+<body>
 
 <div class="container h-100">
-    <div class="row h-100 align-items-center justify-content-center">
-        <div class="col-4">
-		<h1 class="text-center font-weight-bold">£ 764.31</h1>
-		<h2 class="text-center text-danger">26.32 %      £ -245.24</h2>
+    <div class="row h-50 p-3 align-items-end justify-content-center">
+        <div class="col-10">
+		<h1 id="pnlPc" class="text-center title">Calculating...</h1>
         </div>
     </div>
+
+
+    <div class="row h-50 p-3 justify-content-center">
+        <div class="col-4">
+		<h2 class="text-center subtitle">VALUE <span id="value">Calculating...</span></h2>
+        </div>
+        <div class="col-4">
+		<h2 class="text-center subtitle">PNL <span id="pnl">Calculating...</span></h2>
+        </div>
+    </div>
+
+    <script>fetchValues()</script>
 </div>
 
 </body>
