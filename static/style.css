@@ -1,31 +1,53 @@
 body,html {
   height: 100%;
   background-color: black;
+  color: #424242;
 }
 
-.title {
+.pnlpc {
   font-size: 100px;
   font-weight: bold;
   color: #D50000;
 }
 
-.subtitle {
-  font-size: 60px;
-  font-weight: bold;
-  color: #424242;
-  visibility: hidden;
-}
+/* .subtitle { */
+/*   font-size: 60px; */
+/*   font-weight: bold; */
+/*   color: #424242; */
+/*   visibility: hidden; */
+/* } */
 
 
-#value {
-  font-size: 60px;
-  font-weight: bold;
-  color: #FF6D00;
-}
+/* #value { */
+/*   font-size: 60px; */
+/*   font-weight: bold; */
+/*   color: #FF6D00; */
+/* } */
 
 
-#pnl {
-  font-size: 60px;
-  font-weight: bold;
-  color: #D50000;
-}
+/* #pnl { */
+/*   font-size: 60px; */
+/*   font-weight: bold; */
+/*   color: #D50000; */
+/* } */
+
+/* #title { */
+/*   font-size: 100px; */
+/*   font-weight: bold; */
+/*   color: #D50000; */
+/*   display: none; */
+/* } */
+
+/* #subtitle-1 { */
+/*   font-size: 60px; */
+/*   font-weight: bold; */
+/*   color: #424242; */
+/*   display: none; */
+/* } */
+
+/* #subtitle-2 { */
+/*   font-size: 60px; */
+/*   font-weight: bold; */
+/*   color: #424242; */
+/*   display: none; */
+/* } */
