@@ -7,7 +7,6 @@ body,html {
 #pnlPc {
   font-size: 100px;
   font-weight: bold;
-  color: #D50000;
 }
 
 .subtitle {
@@ -25,7 +24,6 @@ body,html {
 #pnl {
   font-size: 60px;
   font-weight: bold;
-  color: #D50000;
 }
 
 .loader {
