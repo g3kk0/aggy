@@ -3,7 +3,7 @@ package coinbasepro
 import (
 	"strconv"
 
-	coinbasepro "github.com/preichenberger/go-coinbasepro/v2"
+	coinbasepro "github.com/g3kk0/go-coinbasepro"
 )
 
 func (c *Client) GetTransfers() (map[string]float64, error) {

@@ -1,7 +1,7 @@
 package coinbasepro
 
 import (
-	coinbasepro "github.com/preichenberger/go-coinbasepro/v2"
+	coinbasepro "github.com/g3kk0/go-coinbasepro"
 )
 
 type Client struct {
