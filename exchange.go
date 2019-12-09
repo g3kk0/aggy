@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/g3kk0/aggy/binance"
-	"github.com/g3kk0/aggy/gdax"
+	"github.com/g3kk0/aggy/coinbasepro"
 	coinmarketcap "github.com/g3kk0/go-coinmarketcap"
 	forex "github.com/g3kk0/go-forex"
 )
@@ -41,10 +41,10 @@ func (e *Exchange) Value(cmcKey, quoteCurrency string) ([]Account, error) {
 	var err error
 
 	switch e.Type {
-	case "gdax":
-		gc := gdax.NewClient(e.Key, e.Secret, e.Passphrase)
+	case "coinbasepro":
+		cbc := coinbasepro.NewClient(e.Key, e.Secret, e.Passphrase)
 
-		accs, err := gc.GetAccounts()
+		accs, err := cbc.GetAccounts()
 		if err != nil {
 			return accounts, err
 		}
@@ -52,7 +52,7 @@ func (e *Exchange) Value(cmcKey, quoteCurrency string) ([]Account, error) {
 		// do this better (avoid the copy & duplication)
 		for k, v := range accs {
 			account := Account{
-				Exchange: "gdax",
+				Exchange: "coinbasepro",
 				Symbol:   k,
 				Amount:   v,
 			}
