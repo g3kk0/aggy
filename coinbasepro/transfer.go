@@ -1,9 +1,9 @@
-package gdax
+package coinbasepro
 
 import (
 	"strconv"
 
-	gdax "github.com/preichenberger/go-gdax"
+	coinbasepro "github.com/g3kk0/go-coinbasepro"
 )
 
 func (c *Client) GetTransfers() (map[string]float64, error) {
@@ -14,17 +14,17 @@ func (c *Client) GetTransfers() (map[string]float64, error) {
 		return transfers, err
 	}
 
-	var ledgers []gdax.LedgerEntry
+	var ledgers []coinbasepro.LedgerEntry
 
 	for _, a := range accounts {
-		cursor := c.Conn.ListAccountLedger(a.Id)
+		cursor := c.Conn.ListAccountLedger(a.ID)
 		for cursor.HasMore {
 			if err := cursor.NextPage(&ledgers); err != nil {
 				return transfers, err
 			}
 
 			for _, l := range ledgers {
-				if l.Type == "transfer" && l.Details.ProductId == "" {
+				if l.Type == "transfer" && l.Details.ProductID == "" {
 					amount, err := strconv.ParseFloat(l.Amount, 64)
 					if err != nil {
 						return transfers, err

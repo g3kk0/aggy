@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/g3kk0/aggy/gdax"
+	"github.com/g3kk0/aggy/coinbasepro"
 )
 
 type Response struct {
@@ -23,21 +23,21 @@ type Response struct {
 func apiHandler(w http.ResponseWriter, r *http.Request) {
 	var resp Response
 
-	gdaxSecret := os.Getenv("GDAX_SECRET")
-	gdaxKey := os.Getenv("GDAX_KEY")
-	gdaxPassphrase := os.Getenv("GDAX_PASSPHRASE")
+	coinbaseProSecret := os.Getenv("COINBASE_PRO_SECRET")
+	coinbaseProKey := os.Getenv("COINBASE_PRO_KEY")
+	coinbaseProPassphrase := os.Getenv("COINBASE_PRO_PASSPHRASE")
 	binanceKey := os.Getenv("BINANCE_KEY")
 	binanceSecret := os.Getenv("BINANCE_SECRET")
 	cmcKey := os.Getenv("COINMARKETCAP_KEY")
 	quoteCurrency := "GBP"
 
-	ge := NewExchange("gdax", gdaxKey, gdaxSecret, gdaxPassphrase)
+	cbe := NewExchange("coinbasepro", coinbaseProKey, coinbaseProSecret, coinbaseProPassphrase)
 	be := NewExchange("binance", binanceKey, binanceSecret, "")
 
 	// fix this client duplication
-	gc := gdax.NewClient(gdaxKey, gdaxSecret, gdaxPassphrase)
+	cbc := coinbasepro.NewClient(coinbaseProKey, coinbaseProSecret, coinbaseProPassphrase)
 
-	transfers, err := gc.GetTransfers()
+	transfers, err := cbc.GetTransfers()
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
@@ -59,7 +59,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	geValue, err := ge.Value(cmcKey, quoteCurrency)
+	cbeValue, err := cbe.Value(cmcKey, quoteCurrency)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
@@ -69,7 +69,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 	}
 
-	resp.Holdings = append(geValue, beValue...)
+	resp.Holdings = append(cbeValue, beValue...)
 
 	var totalValue float64
 	for _, a := range resp.Holdings {
