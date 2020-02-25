@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -93,11 +92,12 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 var fiatSymbols = []string{"EUR", "GBP", "USD"}
 
 func main() {
-	port := flag.Int("p", 8080, "HTTP listen port")
-	flag.Parse()
+	port := os.Getenv("PORT")
+	//port := flag.Int("p", 8080, "HTTP listen port")
+	//flag.Parse()
 
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 	http.HandleFunc("/api", apiHandler)
-	fmt.Printf("started http server at 0.0.0.0:%d\n", *port)
-	log.Fatal(http.ListenAndServe(":"+fmt.Sprint(*port), nil))
+	fmt.Printf("started http server at 0.0.0.0:%d\n", port)
+	log.Fatal(http.ListenAndServe(":"+fmt.Sprint(port), nil))
 }
