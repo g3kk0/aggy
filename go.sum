@@ -10,5 +10,7 @@ github.com/g3kk0/go-coinmarketcap v0.0.0-20181107182534-0021a3e5b023 h1:tanMwhHV
 github.com/g3kk0/go-coinmarketcap v0.0.0-20181107182534-0021a3e5b023/go.mod h1:g/sRxrSFkthbb+etinwdAM3Oucja61lVG4n1n14YV+w=
 github.com/g3kk0/go-forex v0.0.0-20190716172512-57c6c4c3eb75 h1:i8EF3qSVGSKdS0afhVqFgo8vEysUyUAZElcrA7kb40Y=
 github.com/g3kk0/go-forex v0.0.0-20190716172512-57c6c4c3eb75/go.mod h1:6oDxYXKppJEZ9kR1UcJPdrxjmhC7XoLUTusd5NstD/A=
+github.com/g3kk0/go-forex v0.0.0-20210405111737-3034914b9c2a h1:XjlhNhLxZL+a9da/UNmr7Q+bpmfWCXX0gnjRCjtACLU=
+github.com/g3kk0/go-forex v0.0.0-20210405111737-3034914b9c2a/go.mod h1:6oDxYXKppJEZ9kR1UcJPdrxjmhC7XoLUTusd5NstD/A=
 github.com/gorilla/websocket v1.4.1 h1:q7AeDBpnBk8AogcD4DSag/Ukw/KV+YhzLj2bP5HvKCM=
 github.com/gorilla/websocket v1.4.1/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
