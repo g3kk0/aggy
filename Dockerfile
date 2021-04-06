@@ -1,19 +1,13 @@
-FROM golang as builder
+FROM golang as build-env
 
-WORKDIR /build
-
-COPY . .
-
-RUN GCO_ENABLED=0 GOOS=linux go build -o aggy
+WORKDIR /workspace
+ADD . /workspace
+RUN GCO_ENABLED=0 go build -o aggy
 
 
-FROM alpine:latest
+FROM gcr.io/distroless/base-debian10
 
-RUN apk add --no-cache ca-certificates
-
-COPY --from=builder /build/aggy /aggy
-RUN chmod +x /aggy
-
+COPY --from=build-env /workspace/aggy /
 ENV PORT 8080
 
 CMD ["/aggy"]
