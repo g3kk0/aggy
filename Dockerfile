@@ -1,13 +1,16 @@
-FROM golang as build-env
+FROM golang:1.16.3-alpine as build-env
 
 WORKDIR /workspace
-ADD . /workspace
-RUN GCO_ENABLED=0 go build -o aggy
+COPY . /workspace
+RUN go build -o aggy
 
 
-FROM gcr.io/distroless/base-debian10
+FROM golang:1.16.3-alpine
 
+WORKDIR /
 COPY --from=build-env /workspace/aggy /
+COPY --from=build-env /workspace/static /static
+
 ENV PORT 8080
 
 CMD ["/aggy"]
